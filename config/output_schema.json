@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "request_id",
+    "status",
+    "route",
+    "intent",
+    "risk",
+    "message",
+    "fallback_used",
+    "tool_results",
+    "policy",
+    "errors"
+  ],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["success", "safe_fallback"] },
+    "route": { "type": "string", "enum": ["direct", "retrieval", "tool_workflow"] },
+    "intent": { "type": "string" },
+    "risk": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "message": { "type": "string" },
+    "fallback_used": { "type": "boolean" },
+    "tool_results": { "type": "object" },
+    "policy": {
+      "type": "object",
+      "required": ["allowed", "reason", "blocked_rules", "allowed_tools"],
+      "properties": {
+        "allowed": { "type": "boolean" },
+        "reason": { "type": "string" },
+        "blocked_rules": { "type": "array", "items": { "type": "string" } },
+        "allowed_tools": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "errors": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,27 @@
+version: 1
+allowed_tools:
+  - doc_search
+  - calculator
+  - task_mock
+blocked_keywords:
+  - delete system32
+  - exfiltrate
+  - bypass policy
+  - drop table
+  - malware
+blocked_intents:
+  - unsafe
+intent_risk_caps:
+  general: medium
+  search_docs: medium
+  math: low
+  task_manage: medium
+  unsafe: low
+tool_permissions:
+  general: []
+  search_docs:
+    - doc_search
+  math:
+    - calculator
+  task_manage:
+    - task_mock

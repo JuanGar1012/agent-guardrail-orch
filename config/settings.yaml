@@ -1,0 +1,6 @@
+tool_timeout_seconds: 2.0
+db_path: data/telemetry.db
+enable_ollama: false
+ollama_model: llama3.2:3b
+ollama_host: http://127.0.0.1:11434
+output_validation_retries: 1
