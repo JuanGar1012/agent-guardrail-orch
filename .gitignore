@@ -2,6 +2,11 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+frontend/node_modules/
+frontend/dist/
 data/*.db
 data/*_summary.json
 data/*_report.json
+data/incident_summary.json
+data/incident_summary.md
+data/run_all_summary.json

@@ -40,6 +40,14 @@ scripts/
   reliability_harness.py
   benchmark_scenarios.json
   metrics_report.py
+  incident_report.py
+  run_all.py
+frontend/
+  src/App.tsx
+  src/lib/api.ts
+  src/components/ThemeToggle.tsx
+  src/styles/index.css
+  package.json
 tests/
   test_policies.py
   test_reliability.py
@@ -108,6 +116,19 @@ Expected snippet:
 7 passed
 ```
 
+## One-Command Verification (Python)
+```powershell
+python scripts/run_all.py
+```
+
+Runs in order:
+- tests
+- reliability harness
+- metrics report
+- incident summary report
+
+Writes `data/run_all_summary.json`.
+
 ## Reliability Harness
 ```powershell
 python scripts/reliability_harness.py
@@ -126,6 +147,39 @@ Writes `data/metrics_summary.json` with:
 - `blocked_unsafe_actions_count`
 - `task_success_rate`
 - `fallback_activation_rate`
+
+## Incident Summary Report
+```powershell
+python scripts/incident_report.py
+```
+
+Writes:
+- `data/incident_summary.json`
+- `data/incident_summary.md`
+
+## Frontend (React + Tailwind)
+Open a second terminal:
+
+```powershell
+cd frontend
+cmd /c npm install
+cmd /c npm run dev
+```
+
+Frontend URL:
+```text
+http://127.0.0.1:5173
+```
+
+Backend URL (keep API running):
+```text
+http://127.0.0.1:8000
+```
+
+Optional API base override:
+```powershell
+copy .env.example .env
+```
 
 ## API Endpoints
 - `POST /agent/run`
