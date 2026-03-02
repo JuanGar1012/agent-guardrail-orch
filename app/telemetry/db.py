@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -100,3 +100,26 @@ class TelemetryDB:
                 for row in recent
             ],
         }
+
+    def incident_trends(self, days: int = 7) -> list[dict[str, Any]]:
+        incident_types = ("policy_block", "tool_failure", "timeout", "invalid_output")
+        placeholders = ",".join("?" for _ in incident_types)
+        start_ts = (datetime.now(timezone.utc) - timedelta(days=max(1, days) - 1)).isoformat()
+
+        with self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT substr(ts, 1, 10) AS day, event_type, COUNT(*) AS count
+                FROM events
+                WHERE event_type IN ({})
+                  AND ts >= ?
+                GROUP BY substr(ts, 1, 10), event_type
+                ORDER BY day ASC
+                """.format(placeholders),
+                (*incident_types, start_ts),
+            ).fetchall()
+
+        return [
+            {"day": str(row["day"]), "event_type": str(row["event_type"]), "count": int(row["count"])}
+            for row in rows
+        ]

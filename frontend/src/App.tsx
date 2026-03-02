@@ -2,15 +2,25 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   Activity,
   AlertOctagon,
+  BarChart3,
   CircleSlash2,
   Database,
+  Gauge,
   ListChecks,
   Play,
   RefreshCw,
   ShieldCheck,
   Wrench
 } from "lucide-react";
-import { fetchIncidents, fetchPolicies, runAgent, type IncidentSummary, type RunResponse } from "./lib/api";
+import {
+  fetchDashboard,
+  fetchIncidents,
+  fetchPolicies,
+  runAgent,
+  type DashboardData,
+  type IncidentSummary,
+  type RunResponse
+} from "./lib/api";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { StatusPill } from "./components/StatusPill";
 
@@ -40,6 +50,9 @@ export default function App(): JSX.Element {
   const [incidents, setIncidents] = useState<IncidentSummary | null>(null);
   const [incidentLoading, setIncidentLoading] = useState(false);
   const [incidentError, setIncidentError] = useState<string | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -73,9 +86,23 @@ export default function App(): JSX.Element {
     }
   }
 
+  async function loadDashboard(): Promise<void> {
+    setDashboardLoading(true);
+    setDashboardError(null);
+    try {
+      const data = await fetchDashboard();
+      setDashboard(data);
+    } catch (error) {
+      setDashboardError((error as Error).message);
+    } finally {
+      setDashboardLoading(false);
+    }
+  }
+
   useEffect(() => {
     void loadPolicies();
     void loadIncidents();
+    void loadDashboard();
   }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -90,6 +117,7 @@ export default function App(): JSX.Element {
       const data = await runAgent(payload);
       setRunResult(data);
       await loadIncidents();
+      await loadDashboard();
     } catch (error) {
       setRunError((error as Error).message);
     } finally {
@@ -103,6 +131,13 @@ export default function App(): JSX.Element {
     }
     return runResult.status === "success" ? "ok" : "warn";
   }, [runResult]);
+
+  const summaryMetrics = dashboard?.metrics_summary ?? {};
+  const taskSuccessRate = Number(summaryMetrics.task_success_rate ?? 0);
+  const fallbackActivationRate = Number(summaryMetrics.fallback_activation_rate ?? 0);
+  const blockedUnsafeActions = Number(summaryMetrics.blocked_unsafe_actions_count ?? 0);
+  const precisionProxy = Number(summaryMetrics.policy_precision_proxy ?? 0);
+  const trendMax = Math.max(1, ...(dashboard?.incident_trends ?? []).map((item) => item.count));
 
   return (
     <div className="min-h-screen bg-surface text-ink transition-colors">
@@ -214,6 +249,66 @@ export default function App(): JSX.Element {
         </section>
 
         <section className="mt-4">
+          <article className="panel mb-4">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="panel-title">
+                <BarChart3 size={16} />
+                Performance Snapshot
+              </h2>
+              <button
+                type="button"
+                className="btn-ghost"
+                onClick={() => void loadDashboard()}
+                disabled={dashboardLoading}
+              >
+                <RefreshCw size={14} className={dashboardLoading ? "animate-spin" : ""} />
+              </button>
+            </div>
+            {dashboardError ? <p className="text-sm text-red-600 dark:text-red-300">{dashboardError}</p> : null}
+            <div className="grid gap-3 md:grid-cols-4">
+              <div className="metric-card">
+                <p className="metric-label">Task Success</p>
+                <p className="metric-value">{(taskSuccessRate * 100).toFixed(1)}%</p>
+              </div>
+              <div className="metric-card">
+                <p className="metric-label">Fallback Rate</p>
+                <p className="metric-value">{(fallbackActivationRate * 100).toFixed(1)}%</p>
+              </div>
+              <div className="metric-card">
+                <p className="metric-label">Blocked Unsafe</p>
+                <p className="metric-value">{blockedUnsafeActions}</p>
+              </div>
+              <div className="metric-card">
+                <p className="metric-label">Policy Precision</p>
+                <p className="metric-value">{(precisionProxy * 100).toFixed(1)}%</p>
+              </div>
+            </div>
+            <div className="mt-4 rounded-xl border border-border bg-card p-3">
+              <p className="mb-2 flex items-center gap-2 text-sm font-semibold">
+                <Gauge size={14} />
+                7-Day Incident Trend
+              </p>
+              {(dashboard?.incident_trends ?? []).length === 0 ? (
+                <p className="text-xs text-muted">No incident trend data yet. Run scenarios and refresh.</p>
+              ) : (
+                <div className="space-y-2">
+                  {dashboard?.incident_trends.map((point) => (
+                    <div key={`${point.day}-${point.event_type}`} className="grid grid-cols-[11rem_1fr_auto] items-center gap-2 text-xs">
+                      <span className="text-muted">{point.day} {point.event_type}</span>
+                      <div className="h-2 overflow-hidden rounded bg-panel">
+                        <div
+                          className="h-full rounded bg-gradient-to-r from-bluecore-500 to-bluecore-300"
+                          style={{ width: `${Math.max(6, Math.round((point.count / trendMax) * 100))}%` }}
+                        />
+                      </div>
+                      <span className="font-semibold">{point.count}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+
           <article className="panel">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="panel-title">
@@ -223,7 +318,10 @@ export default function App(): JSX.Element {
               <button
                 type="button"
                 className="btn-ghost"
-                onClick={() => void loadIncidents()}
+                onClick={() => {
+                  void loadIncidents();
+                  void loadDashboard();
+                }}
                 disabled={incidentLoading}
               >
                 <RefreshCw size={14} className={incidentLoading ? "animate-spin" : ""} />

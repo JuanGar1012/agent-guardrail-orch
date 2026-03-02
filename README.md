@@ -185,6 +185,7 @@ copy .env.example .env
 - `POST /agent/run`
 - `GET /agent/policies`
 - `GET /agent/incidents`
+- `GET /agent/dashboard`
 - `GET /health`
 
 ## Replace These Placeholders

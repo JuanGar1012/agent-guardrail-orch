@@ -35,6 +35,18 @@ export type IncidentSummary = {
   }>;
 };
 
+export type IncidentTrendPoint = {
+  day: string;
+  event_type: string;
+  count: number;
+};
+
+export type DashboardData = {
+  metrics_summary: Record<string, unknown>;
+  incident_summary: IncidentSummary;
+  incident_trends: IncidentTrendPoint[];
+};
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -65,4 +77,8 @@ export function fetchPolicies(): Promise<Record<string, unknown>> {
 
 export function fetchIncidents(): Promise<IncidentSummary> {
   return request<IncidentSummary>("/agent/incidents");
+}
+
+export function fetchDashboard(): Promise<DashboardData> {
+  return request<DashboardData>("/agent/dashboard");
 }

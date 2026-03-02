@@ -89,6 +89,22 @@
     background: var(--panel);
   }
 
+  .metric-card {
+    @apply rounded-lg border px-3 py-3;
+    border-color: var(--border);
+    background: var(--panel);
+  }
+
+  .metric-label {
+    @apply text-xs font-semibold tracking-wide;
+    color: var(--muted);
+  }
+
+  .metric-value {
+    @apply mt-1 text-2xl font-bold;
+    font-family: "Space Grotesk", sans-serif;
+  }
+
   .info-title {
     @apply mb-1 flex items-center gap-2 text-sm font-semibold;
   }

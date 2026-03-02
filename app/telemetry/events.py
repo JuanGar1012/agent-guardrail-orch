@@ -14,3 +14,6 @@ class TelemetryService:
 
     def get_incidents(self) -> dict[str, Any]:
         return self.db.incident_summary()
+
+    def get_incident_trends(self, days: int = 7) -> list[dict[str, Any]]:
+        return self.db.incident_trends(days=days)
