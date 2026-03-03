@@ -10,3 +10,5 @@ data/*_report.json
 data/incident_summary.json
 data/incident_summary.md
 data/run_all_summary.json
+reports/*.json
+reports/*.md

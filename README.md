@@ -41,6 +41,7 @@ scripts/
   benchmark_scenarios.json
   metrics_report.py
   incident_report.py
+  case_study_infiltrate.py
   run_all.py
 frontend/
   src/App.tsx
@@ -113,7 +114,7 @@ pytest -q
 
 Expected snippet:
 ```text
-7 passed
+15 passed
 ```
 
 ## One-Command Verification (Python)
@@ -126,8 +127,12 @@ Runs in order:
 - reliability harness
 - metrics report
 - incident summary report
+- infiltrate mitigation case study
 
-Writes `data/run_all_summary.json`.
+Writes:
+- `data/run_all_summary.json`
+- `reports/eval_dossier.json`
+- `reports/eval_dossier.md`
 
 ## Reliability Harness
 ```powershell
@@ -156,6 +161,20 @@ python scripts/incident_report.py
 Writes:
 - `data/incident_summary.json`
 - `data/incident_summary.md`
+
+## Mitigation Case Study (Infiltrate Variant)
+```powershell
+python scripts/case_study_infiltrate.py
+```
+
+Writes:
+- `reports/case_study_infiltrate.json`
+- `reports/case_study_infiltrate.md`
+
+Use this when walking interviewers through a concrete:
+- observed failure mode
+- mitigation change
+- before/after validation trail
 
 ## Frontend (React + Tailwind)
 Open a second terminal:
