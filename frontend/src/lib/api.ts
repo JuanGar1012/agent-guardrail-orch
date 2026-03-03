@@ -41,10 +41,63 @@ export type IncidentTrendPoint = {
   count: number;
 };
 
+export type IncidentFeedItem = {
+  request_id: string;
+  incident_type: string;
+  first_seen_ts: string;
+  last_seen_ts: string;
+  request_text: string;
+  reason_summary: string;
+  event_count: number;
+  incident_events: Array<{
+    ts: string;
+    event_type: string;
+    step: string;
+    details: Record<string, unknown>;
+  }>;
+};
+
+export type IncidentDetail = {
+  request_id: string;
+  found: boolean;
+  request_text: string;
+  incident_count: number;
+  incident_types: string[];
+  block_reasons: string[];
+  timeline: Array<{
+    id: number;
+    ts: string;
+    step: string;
+    event_type: string;
+    success: boolean;
+    details: Record<string, unknown>;
+  }>;
+};
+
+export type PerformancePoint = {
+  hour: string;
+  requests: number;
+  successful: number;
+  fallback_requests: number;
+  policy_blocks: number;
+  tool_failures: number;
+  timeouts: number;
+  invalid_outputs: number;
+};
+
 export type DashboardData = {
   metrics_summary: Record<string, unknown>;
   incident_summary: IncidentSummary;
   incident_trends: IncidentTrendPoint[];
+  incident_feed: IncidentFeedItem[];
+  performance_24h: PerformancePoint[];
+};
+
+export type ResetResponse = {
+  status: string;
+  telemetry_deleted_events: number;
+  tasks_cleared: number;
+  deleted_files: string[];
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "http://127.0.0.1:8000";
@@ -81,4 +134,16 @@ export function fetchIncidents(): Promise<IncidentSummary> {
 
 export function fetchDashboard(): Promise<DashboardData> {
   return request<DashboardData>("/agent/dashboard");
+}
+
+export function fetchIncidentFeed(limit = 50): Promise<{ items: IncidentFeedItem[] }> {
+  return request<{ items: IncidentFeedItem[] }>(`/agent/incidents/feed?limit=${limit}`);
+}
+
+export function fetchIncidentDetail(requestId: string): Promise<IncidentDetail> {
+  return request<IncidentDetail>(`/agent/incidents/${requestId}`);
+}
+
+export function resetApplicationState(): Promise<ResetResponse> {
+  return request<ResetResponse>("/agent/reset", { method: "POST" });
 }

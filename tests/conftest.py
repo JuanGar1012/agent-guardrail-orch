@@ -8,11 +8,28 @@ from fastapi.testclient import TestClient
 
 from app.dependencies import get_orchestrator
 from app.main import app
+from app.tools.task_mock import TASKS
 
 
 @pytest.fixture(autouse=True)
 def reset_state() -> None:
     get_orchestrator.cache_clear()
+    TASKS.clear()
+
+    cleanup_targets = [
+        Path("data/metrics_summary.json"),
+        Path("data/reliability_report.json"),
+        Path("data/incident_summary.json"),
+        Path("data/incident_summary.md"),
+        Path("data/run_all_summary.json"),
+    ]
+    for target in cleanup_targets:
+        if target.exists():
+            try:
+                target.unlink()
+            except PermissionError:
+                pass
+
     db_path = Path("data/telemetry.db")
     if db_path.exists():
         try:

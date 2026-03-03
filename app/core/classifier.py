@@ -31,6 +31,8 @@ class RequestClassifier:
         unsafe_terms = [
             "delete system32",
             "exfiltrate",
+            "infiltrate",
+            "infiltration",
             "bypass policy",
             "drop table",
             "malware",

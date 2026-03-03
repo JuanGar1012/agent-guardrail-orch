@@ -76,6 +76,10 @@
     @apply rounded-lg border border-bluecore-500 bg-bluecore-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-bluecore-500 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
+  .btn-danger {
+    @apply inline-flex items-center gap-2 rounded-lg border border-red-500 bg-red-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
   .btn-ghost {
     @apply inline-flex items-center justify-center rounded-lg border px-2 py-1.5 transition;
     border-color: var(--border);
@@ -103,6 +107,12 @@
   .metric-value {
     @apply mt-1 text-2xl font-bold;
     font-family: "Space Grotesk", sans-serif;
+  }
+
+  .chart-card {
+    @apply rounded-lg border p-3;
+    border-color: var(--border);
+    background: var(--panel);
   }
 
   .info-title {

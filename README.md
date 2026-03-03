@@ -171,6 +171,11 @@ Frontend URL:
 http://127.0.0.1:5173
 ```
 
+Frontend includes:
+- Incident Explorer with per-request incident drill-down (`why blocked/failed`, timeline, and raw event details)
+- Interactive rolling 24-hour performance charts (throughput/outcomes + incident type distribution)
+- One-click `Reset Data` control to return runtime state to a first-run baseline
+
 Backend URL (keep API running):
 ```text
 http://127.0.0.1:8000
@@ -183,8 +188,11 @@ copy .env.example .env
 
 ## API Endpoints
 - `POST /agent/run`
+- `POST /agent/reset`
 - `GET /agent/policies`
 - `GET /agent/incidents`
+- `GET /agent/incidents/feed`
+- `GET /agent/incidents/{request_id}`
 - `GET /agent/dashboard`
 - `GET /health`
 

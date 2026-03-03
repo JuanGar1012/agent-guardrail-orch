@@ -6,6 +6,8 @@ allowed_tools:
 blocked_keywords:
   - delete system32
   - exfiltrate
+  - infiltrate
+  - infiltration
   - bypass policy
   - drop table
   - malware
