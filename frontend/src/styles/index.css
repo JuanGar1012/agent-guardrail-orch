@@ -28,7 +28,7 @@
   html,
   body,
   #root {
-    @apply m-0 min-h-full;
+    @apply m-0 min-h-full overflow-x-hidden;
   }
 
   body {
@@ -46,14 +46,14 @@
 
 @layer components {
   .panel {
-    @apply rounded-xl2 border p-4 sm:p-5;
+    @apply min-w-0 rounded-xl2 border p-4 sm:p-5;
     border-color: var(--border);
     background: var(--card);
     backdrop-filter: blur(12px);
   }
 
   .panel-title {
-    @apply flex items-center gap-2 text-lg font-semibold;
+    @apply flex items-center gap-2 text-base font-semibold sm:text-lg;
   }
 
   .field-label {
@@ -78,6 +78,28 @@
 
   .btn-danger {
     @apply inline-flex items-center gap-2 rounded-lg border border-red-500 bg-red-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .tab-btn {
+    @apply inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-lg border px-3 py-2 text-xs font-semibold transition;
+    border-color: var(--border);
+    background: var(--panel);
+    color: var(--ink);
+  }
+
+  .tab-btn-active {
+    @apply border-bluecore-500 bg-bluecore-600 text-white;
+  }
+
+  .tab-mini {
+    @apply inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-semibold;
+    border-color: var(--border);
+    background: var(--panel);
+    color: var(--ink);
+  }
+
+  .tab-mini-active {
+    @apply border-bluecore-500 bg-bluecore-600 text-white;
   }
 
   .btn-ghost {
@@ -122,6 +144,77 @@
   .info-copy {
     @apply text-xs leading-relaxed;
     color: var(--muted);
+  }
+
+  .kpi-card {
+    @apply rounded-lg border px-3 py-2;
+    border-color: var(--border);
+    background: var(--panel);
+  }
+
+  .kpi-label {
+    @apply text-[11px] font-semibold tracking-wide;
+    color: var(--muted);
+  }
+
+  .kpi-value {
+    @apply mt-1 text-base font-bold sm:text-lg;
+    font-family: "Space Grotesk", sans-serif;
+  }
+
+  .decision-banner-grid {
+    @apply grid gap-2 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .decision-label {
+    @apply text-[11px] font-semibold tracking-wide;
+    color: var(--muted);
+  }
+
+  .decision-value {
+    @apply text-sm font-semibold break-words;
+  }
+
+  .risk-badge {
+    @apply inline-flex rounded-full px-2 py-0.5 text-xs font-bold uppercase;
+  }
+
+  .risk-low {
+    @apply bg-emerald-100 text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100;
+  }
+
+  .risk-medium {
+    @apply bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100;
+  }
+
+  .risk-high {
+    @apply bg-orange-100 text-orange-900 dark:bg-orange-900/40 dark:text-orange-100;
+  }
+
+  .risk-critical {
+    @apply bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100;
+  }
+
+  .severity-chip {
+    @apply inline-flex rounded-full px-2 py-0.5 text-[11px] font-bold uppercase;
+  }
+
+  .severity-low {
+    @apply bg-emerald-100 text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-100;
+  }
+
+  .severity-medium {
+    @apply bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100;
+  }
+
+  .severity-high {
+    @apply bg-red-100 text-red-900 dark:bg-red-900/40 dark:text-red-100;
+  }
+
+  .safe-wrap {
+    @apply break-words whitespace-normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 }
 

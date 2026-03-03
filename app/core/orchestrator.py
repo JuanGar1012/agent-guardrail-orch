@@ -75,6 +75,13 @@ class AgentOrchestrator:
                 False,
                 {"blocked_rules": decision.blocked_rules},
             )
+            self.telemetry.log(
+                request_id,
+                "outcome",
+                "completed",
+                True,
+                {"status": "safe_fallback", "reason": "policy_block"},
+            )
             return self.fallback_manager.safe_response(
                 request_id=request_id,
                 intent=classification.intent,
@@ -102,6 +109,13 @@ class AgentOrchestrator:
                 )
             except TimeoutError as exc:
                 self.telemetry.log(request_id, "tool", "timeout", False, {"tool": tool_name, "error": str(exc)})
+                self.telemetry.log(
+                    request_id,
+                    "outcome",
+                    "completed",
+                    True,
+                    {"status": "safe_fallback", "reason": "timeout"},
+                )
                 return self.fallback_manager.safe_response(
                     request_id=request_id,
                     intent=classification.intent,
@@ -118,6 +132,13 @@ class AgentOrchestrator:
                     "tool_failure",
                     False,
                     {"tool": tool_name, "error": str(exc)},
+                )
+                self.telemetry.log(
+                    request_id,
+                    "outcome",
+                    "completed",
+                    True,
+                    {"status": "safe_fallback", "reason": "tool_failure"},
                 )
                 return self.fallback_manager.safe_response(
                     request_id=request_id,
@@ -160,6 +181,13 @@ class AgentOrchestrator:
                 "invalid_output",
                 False,
                 {"errors": validation_errors, "retry": retries},
+            )
+            self.telemetry.log(
+                request_id,
+                "outcome",
+                "completed",
+                True,
+                {"status": "safe_fallback", "reason": "invalid_output"},
             )
             return self.fallback_manager.safe_response(
                 request_id=request_id,

@@ -29,3 +29,9 @@ class TelemetryService:
 
     def clear_all_events(self) -> int:
         return self.db.clear_events()
+
+    def get_observability_snapshot(self, hours: int = 24) -> dict[str, Any]:
+        return self.db.observability_snapshot(hours=hours)
+
+    def update_incident_status(self, request_id: str, status: str, resolution_note: str = "") -> dict[str, Any]:
+        return self.db.set_incident_status(request_id=request_id, status=status, resolution_note=resolution_note)

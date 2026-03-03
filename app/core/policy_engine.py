@@ -27,6 +27,12 @@ class PolicyEngine:
         with self.policy_path.open("r", encoding="utf-8") as fh:
             return yaml.safe_load(fh) or {}
 
+    def replace_policy(self, new_policy: dict[str, Any]) -> dict[str, Any]:
+        with self.policy_path.open("w", encoding="utf-8") as fh:
+            yaml.safe_dump(new_policy, fh, sort_keys=False)
+        self.raw_policy = new_policy
+        return self.raw_policy
+
     def evaluate(
         self,
         text: str,

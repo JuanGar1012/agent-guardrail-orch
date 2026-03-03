@@ -175,6 +175,8 @@ Frontend includes:
 - Incident Explorer with per-request incident drill-down (`why blocked/failed`, timeline, and raw event details)
 - Interactive rolling 24-hour performance charts (throughput/outcomes + incident type distribution)
 - One-click `Reset Data` control to return runtime state to a first-run baseline
+- Decision-centric control plane pages: `Ops Console`, `Policy Studio`, `Incident Ops`, `Observability`
+- Responsive layouts tuned for desktop, tablet, and mobile breakpoints
 
 Backend URL (keep API running):
 ```text
@@ -190,10 +192,15 @@ copy .env.example .env
 - `POST /agent/run`
 - `POST /agent/reset`
 - `GET /agent/policies`
+- `PUT /agent/policies`
+- `GET /agent/policies/view`
+- `POST /agent/policies/simulate`
 - `GET /agent/incidents`
 - `GET /agent/incidents/feed`
 - `GET /agent/incidents/{request_id}`
+- `PATCH /agent/incidents/{request_id}/status`
 - `GET /agent/dashboard`
+- `GET /agent/observability`
 - `GET /health`
 
 ## Replace These Placeholders

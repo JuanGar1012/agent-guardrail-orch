@@ -11,6 +11,20 @@ class RunRequest(BaseModel):
     tool_args: dict[str, Any] | None = None
 
 
+class PolicySimulationRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=4000)
+    preferred_tool: str | None = None
+
+
+class PolicyUpdateRequest(BaseModel):
+    policy: dict[str, Any]
+
+
+class IncidentStatusUpdateRequest(BaseModel):
+    status: str = Field(pattern="^(open|mitigated|closed)$")
+    resolution_note: str = Field(default="", max_length=1000)
+
+
 class PolicyDecisionView(BaseModel):
     allowed: bool
     reason: str
